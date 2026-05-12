@@ -64,11 +64,10 @@ export default function MediaShowcase() {
                     <video
                       src={item.secureUrl}
                       className="h-full w-full object-cover transition-all duration-1000 scale-105 group-hover:scale-100"
+                      autoPlay
                       muted
                       loop
                       playsInline
-                      onMouseOver={(e) => (e.target as HTMLVideoElement).play()}
-                      onMouseOut={(e) => (e.target as HTMLVideoElement).pause()}
                     />
                     <div className="absolute top-4 right-4 w-10 h-10 rounded-full glass-morphism flex items-center justify-center border border-white/10 group-hover:border-brand/40 group-hover:bg-brand/10 transition-all duration-500">
                       <Play size={14} className="text-white fill-white group-hover:text-brand-light group-hover:fill-brand-light transition-colors" />

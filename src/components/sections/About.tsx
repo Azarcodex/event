@@ -78,17 +78,10 @@ export default function About() {
               <video
                 src={item.secureUrl}
                 className="h-full w-full object-cover transition-all duration-1000 scale-105 group-hover:scale-100"
+                autoPlay
                 muted
                 loop
                 playsInline
-                onMouseOver={(e) => {
-                  const video = e.target as HTMLVideoElement;
-                  video.play().catch(() => {});
-                }}
-                onMouseOut={(e) => {
-                  const video = e.target as HTMLVideoElement;
-                  video.pause();
-                }}
               />
               
               

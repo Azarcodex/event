@@ -66,6 +66,7 @@ export default function GalleryPage() {
                       <video
                         src={item.secureUrl}
                         className="h-full w-full object-cover transition-all duration-700"
+                        autoPlay
                         muted
                         loop
                         playsInline
