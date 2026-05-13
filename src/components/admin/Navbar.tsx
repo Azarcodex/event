@@ -31,9 +31,9 @@ export function Navbar({ admin, onMenuClick }: NavbarProps) {
         </div> */}
         
         {/* Mobile Search Trigger (Placeholder for now) */}
-        <button className="sm:hidden p-2 text-zinc-400 hover:text-white">
+        {/* <button className="sm:hidden p-2 text-zinc-400 hover:text-white">
           <Search size={20} />
-        </button>
+        </button> */}
       </div>
 
       <div className="flex items-center gap-2 sm:gap-4">
