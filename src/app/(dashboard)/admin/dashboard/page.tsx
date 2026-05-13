@@ -7,7 +7,8 @@ import {
   Clock,
   LayoutDashboard,
   ShieldCheck,
-  ArrowRight
+  ArrowRight,
+  MessageSquare
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -39,7 +40,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stats Grid - Adaptive Columns */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         {stats.map((stat, i) => (
           <div key={i} className="bg-zinc-900/50 border border-zinc-800 p-5 sm:p-6 rounded-2xl sm:rounded-3xl hover:border-zinc-700 transition-all group relative overflow-hidden">
             <div className="flex items-center justify-between mb-4 relative z-10">
@@ -55,54 +56,49 @@ export default async function DashboardPage() {
           </div>
         ))}
         
-        {/* Empty States / Future Stats */}
-        {[1, 2].map((_, i) => (
-          <div key={i} className="bg-zinc-900/30 border border-zinc-800 border-dashed p-6 rounded-3xl flex flex-col items-center justify-center text-zinc-700 gap-2 text-center">
-            <div className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center">
-              <LayoutDashboard size={18} />
-            </div>
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Module Active</span>
-          </div>
-        ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-        {/* Recent Activity (Responsive Container) */}
-        <div className="lg:col-span-2 bg-zinc-900/50 border border-zinc-800 rounded-3xl overflow-hidden flex flex-col backdrop-blur-sm">
-          <div className="p-6 border-b border-zinc-800 flex items-center justify-between">
-            <h3 className="text-lg font-bold text-white">Recent Activity</h3>
-            <span className="text-[10px] bg-zinc-800 text-zinc-400 px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">Live</span>
-          </div>
-          <div className="flex-1 flex flex-col items-center justify-center py-16 sm:py-24 text-center px-6">
-            <div className="w-16 h-16 bg-zinc-800/50 border border-zinc-700/50 rounded-2xl flex items-center justify-center mb-4 text-zinc-600 shadow-inner">
-              <Clock size={32} />
+
+      {/* Action Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+        <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 p-6 sm:p-8 rounded-3xl shadow-2xl shadow-indigo-500/20 text-white relative overflow-hidden group">
+          <div className="relative z-10">
+            <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-4 border border-white/20">
+              <ImageIcon size={24} />
             </div>
-            <h4 className="text-white font-bold text-lg">No recent activity</h4>
-            <p className="text-zinc-500 text-sm mt-2 max-w-[280px] leading-relaxed">System logs and user actions will appear here as they happen in real-time.</p>
+            <h3 className="text-xl sm:text-2xl font-black mb-2">Media System</h3>
+            <p className="text-indigo-100/80 text-sm sm:text-base mb-6 leading-relaxed">Manage assets across your platform with unified Cloudinary hosting.</p>
+            <Link 
+              href="/admin/media-management"
+              className="w-full bg-white text-indigo-600 font-bold py-3.5 rounded-2xl transition-all border border-white hover:bg-indigo-50 flex items-center justify-center gap-2 active:scale-95 shadow-xl shadow-black/10"
+            >
+              Launch Media Manager
+              <ArrowRight size={18} />
+            </Link>
           </div>
+          {/* Animated bg elements */}
+          <div className="absolute top-[-20%] right-[-10%] w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-1000" />
+          <div className="absolute bottom-[-10%] left-[-10%] w-24 h-24 bg-indigo-400/20 rounded-full blur-xl group-hover:translate-x-12 transition-transform duration-1000" />
         </div>
 
-        {/* Action Cards */}
-        <div className="space-y-6">
-          <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 p-6 sm:p-8 rounded-3xl shadow-2xl shadow-indigo-500/20 text-white relative overflow-hidden group">
-            <div className="relative z-10">
-              <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-4 border border-white/20">
-                <ImageIcon size={24} />
-              </div>
-              <h3 className="text-xl sm:text-2xl font-black mb-2">Media System</h3>
-              <p className="text-indigo-100/80 text-sm sm:text-base mb-6 leading-relaxed">Manage assets across your platform with unified Cloudinary hosting.</p>
-              <Link 
-                href="/admin/media-management"
-                className="w-full bg-white text-indigo-600 font-bold py-3.5 rounded-2xl transition-all border border-white hover:bg-indigo-50 flex items-center justify-center gap-2 active:scale-95 shadow-xl shadow-black/10"
-              >
-                Launch Media Manager
-                <ArrowRight size={18} />
-              </Link>
+        {/* Added Reviews Management Action Card for balance */}
+        <div className="bg-gradient-to-br from-emerald-600 to-teal-800 p-6 sm:p-8 rounded-3xl shadow-2xl shadow-emerald-500/20 text-white relative overflow-hidden group">
+          <div className="relative z-10">
+            <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-4 border border-white/20">
+              <MessageSquare size={24} />
             </div>
-            {/* Animated bg elements */}
-            <div className="absolute top-[-20%] right-[-10%] w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-1000" />
-            <div className="absolute bottom-[-10%] left-[-10%] w-24 h-24 bg-indigo-400/20 rounded-full blur-xl group-hover:translate-x-12 transition-transform duration-1000" />
+            <h3 className="text-xl sm:text-2xl font-black mb-2">Review Center</h3>
+            <p className="text-emerald-100/80 text-sm sm:text-base mb-6 leading-relaxed">Moderate client testimonials and manage your public reputation.</p>
+            <Link 
+              href="/admin/reviews"
+              className="w-full bg-white text-emerald-600 font-bold py-3.5 rounded-2xl transition-all border border-white hover:bg-emerald-50 flex items-center justify-center gap-2 active:scale-95 shadow-xl shadow-black/10"
+            >
+              Manage Testimonials
+              <ArrowRight size={18} />
+            </Link>
           </div>
+          <div className="absolute top-[-20%] right-[-10%] w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-1000" />
+          <div className="absolute bottom-[-10%] left-[-10%] w-24 h-24 bg-emerald-400/20 rounded-full blur-xl group-hover:translate-x-12 transition-transform duration-1000" />
         </div>
       </div>
     </div>
