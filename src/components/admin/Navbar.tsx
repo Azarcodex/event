@@ -21,14 +21,14 @@ export function Navbar({ admin, onMenuClick }: NavbarProps) {
         </button>
 
         {/* Search - Responsive behavior */}
-        <div className="relative max-w-md w-full group hidden sm:block">
+        {/* <div className="relative max-w-md w-full group hidden sm:block">
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-indigo-500 transition-colors" />
           <input 
             type="text" 
             placeholder="Search..." 
             className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl py-2 pl-10 pr-4 outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/5 transition-all text-sm text-zinc-300"
           />
-        </div>
+        </div> */}
         
         {/* Mobile Search Trigger (Placeholder for now) */}
         <button className="sm:hidden p-2 text-zinc-400 hover:text-white">
@@ -38,10 +38,10 @@ export function Navbar({ admin, onMenuClick }: NavbarProps) {
 
       <div className="flex items-center gap-2 sm:gap-4">
         {/* Notifications */}
-        <button className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-xl transition-all relative">
+        {/* <button className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-xl transition-all relative">
           <Bell size={20} />
           <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-indigo-500 rounded-full border-2 border-[#09090b]" />
-        </button>
+        </button> */}
         
         <div className="h-6 w-px bg-zinc-800 mx-1 hidden sm:block" />
 
