@@ -9,7 +9,8 @@ import {
   LogOut, 
   Layers,
   Image as ImageIcon,
-  X
+  X,
+  MessageSquare
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -18,6 +19,7 @@ const navItems = [
   { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
   { label: 'Media Management', href: '/admin/media-management', icon: Layers },
   { label: 'Banner Management', href: '/admin/banner-management', icon: ImageIcon },
+  { label: 'Reviews Management', href: '/admin/reviews', icon: MessageSquare },
   { label: 'Settings', href: '/admin/settings', icon: Settings },
 ];
 

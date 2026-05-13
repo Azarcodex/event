@@ -6,6 +6,8 @@ import About from "@/components/sections/About";
 import Services from "@/components/sections/Services";
 import Contact from "@/components/sections/Contact";
 import HorizontalImageShowcase from "@/components/sections/HorizontalImageShowcase";
+import ReviewsShowcase from "@/components/sections/ReviewsShowcase";
+import ReviewForm from "@/components/sections/ReviewForm";
 
 export default function Home() {
   return (
@@ -16,6 +18,8 @@ export default function Home() {
         <HorizontalImageShowcase />
         <About />
         <Services />
+        <ReviewsShowcase />
+        <ReviewForm />
         <Contact />
       </main>
       <Footer />
