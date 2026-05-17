@@ -10,7 +10,8 @@ import {
   Layers,
   Image as ImageIcon,
   X,
-  MessageSquare
+  MessageSquare,
+  Calendar
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -20,6 +21,7 @@ const navItems = [
   { label: 'Media Management', href: '/admin/media-management', icon: Layers },
   { label: 'Banner Management', href: '/admin/banner-management', icon: ImageIcon },
   { label: 'Reviews Management', href: '/admin/reviews', icon: MessageSquare },
+  { label: 'Event Bookings', href: '/admin/bookings', icon: Calendar },
   { label: 'Settings', href: '/admin/settings', icon: Settings },
 ];
 

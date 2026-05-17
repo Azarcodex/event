@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
-import { ChevronRight, Play, ArrowRight, Loader2 } from 'lucide-react';
+import { ChevronRight, Play, ArrowRight, Loader2, Calendar } from 'lucide-react';
 import { useHeroMedia } from '@/hooks/useHeroMedia';
 import { IMedia } from '@/types/media';
 import { cn } from '@/lib/utils';
 import Magnetic from '@/components/ui/Magnetic';
 import Button from '@/components/ui/Button';
+import Link from 'next/link';
 
 export default function Hero() {
   const { media, loading } = useHeroMedia();
@@ -189,9 +190,20 @@ export default function Hero() {
             className="flex flex-col sm:flex-row items-center gap-6 mt-12"
           >
             <Magnetic>
+              <Link
+                href="/book-event"
+                className="px-10 py-5 text-base font-bold tracking-tight bg-brand text-black hover:bg-brand-light shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_35px_rgba(16,185,129,0.5)] rounded-full flex items-center gap-2 transition-all"
+              >
+                <Calendar size={20} />
+                Book Your Event
+              </Link>
+            </Magnetic>
+
+            <Magnetic>
               <Button 
+                variant="outline"
                 size="lg" 
-                className="px-10 py-5 text-base font-bold tracking-tight bg-brand text-black hover:bg-brand-light shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                className="px-10 py-5 text-base font-bold tracking-tight border-white/20 text-white hover:bg-white hover:text-black transition-all"
                 onClick={scrollToServices}
               >
                 Explore More
