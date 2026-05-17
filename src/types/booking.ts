@@ -20,8 +20,9 @@ export interface IBooking {
   expectedGuests: number;
   estimatedBudget: number;
   preferredCommunicationMethod: 'Phone Call' | 'WhatsApp' | 'Email' | 'Botim' | 'Google Meet' | 'Zoom';
+  status: 'Pending' | 'Completed';
   createdAt: string;
   updatedAt: string;
 }
 
-export type BookingInput = Omit<IBooking, '_id' | 'createdAt' | 'updatedAt'>;
+export type BookingInput = Omit<IBooking, '_id' | 'createdAt' | 'updatedAt' | 'status'> & { status?: 'Pending' | 'Completed' };

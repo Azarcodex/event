@@ -57,3 +57,33 @@ export async function DELETE(
     );
   }
 }
+
+export async function PATCH(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const admin = await checkAdmin();
+    if (!admin) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
+    const body = await req.json();
+    const { status } = body;
+
+    if (status !== 'Pending' && status !== 'Completed') {
+      return NextResponse.json({ message: 'Invalid status' }, { status: 400 });
+    }
+
+    await dbConnect();
+    const updatedBooking = await bookingService.updateBooking(id, { status });
+
+    return NextResponse.json(updatedBooking, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json(
+      { message: error.message || 'Internal Server Error' },
+      { status: 500 }
+    );
+  }
+}

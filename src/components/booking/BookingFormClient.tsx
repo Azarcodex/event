@@ -39,6 +39,7 @@ export default function BookingFormClient() {
     formState: { errors },
   } = useForm<BookingInput>({
     resolver: zodResolver(bookingSchema) as any,
+    mode: 'onChange',
     defaultValues: {
       additionalFunctions: [],
       expectedGuests: 100,
@@ -140,10 +141,15 @@ export default function BookingFormClient() {
                   <input 
                     {...register('groomName')}
                     placeholder="Full Name"
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl pl-14 pr-6 py-4 text-white focus:border-brand/50 focus:bg-white/[0.08] transition-all"
+                    className={cn(
+                      "w-full bg-white/5 border rounded-2xl pl-14 pr-6 py-4 text-white focus:bg-white/[0.08] transition-all outline-none",
+                      errors.groomName 
+                        ? "border-rose-500/50 focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10" 
+                        : "border-white/10 focus:border-brand/50 focus:ring-4 focus:ring-brand/5"
+                    )}
                   />
                 </div>
-                {errors.groomName && <p className="text-red-500 text-xs px-1">{errors.groomName.message}</p>}
+                {errors.groomName && <p className="text-rose-500 text-xs px-1 mt-1 font-bold">{errors.groomName.message}</p>}
               </div>
               <div className="space-y-3">
                 <label className="text-white/40 text-[10px] font-black uppercase tracking-widest px-1">Bride's Name</label>
@@ -152,10 +158,15 @@ export default function BookingFormClient() {
                   <input 
                     {...register('brideName')}
                     placeholder="Full Name"
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl pl-14 pr-6 py-4 text-white focus:border-brand/50 focus:bg-white/[0.08] transition-all"
+                    className={cn(
+                      "w-full bg-white/5 border rounded-2xl pl-14 pr-6 py-4 text-white focus:bg-white/[0.08] transition-all outline-none",
+                      errors.brideName 
+                        ? "border-rose-500/50 focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10" 
+                        : "border-white/10 focus:border-brand/50 focus:ring-4 focus:ring-brand/5"
+                    )}
                   />
                 </div>
-                {errors.brideName && <p className="text-red-500 text-xs px-1">{errors.brideName.message}</p>}
+                {errors.brideName && <p className="text-rose-500 text-xs px-1 mt-1 font-bold">{errors.brideName.message}</p>}
               </div>
             </div>
           </FormSection>
@@ -169,9 +180,14 @@ export default function BookingFormClient() {
                   <input 
                     {...register('preferredFunctionDate')}
                     type="date"
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-brand/50 focus:bg-white/[0.08] transition-all [color-scheme:dark]"
+                    className={cn(
+                      "w-full bg-white/5 border rounded-2xl px-6 py-4 text-white focus:bg-white/[0.08] transition-all [color-scheme:dark] outline-none",
+                      errors.preferredFunctionDate 
+                        ? "border-rose-500/50 focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10" 
+                        : "border-white/10 focus:border-brand/50 focus:ring-4 focus:ring-brand/5"
+                    )}
                   />
-                  {errors.preferredFunctionDate && <p className="text-red-500 text-xs px-1">{errors.preferredFunctionDate.message}</p>}
+                  {errors.preferredFunctionDate && <p className="text-rose-500 text-xs px-1 mt-1 font-bold">{errors.preferredFunctionDate.message}</p>}
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-3">
@@ -179,16 +195,28 @@ export default function BookingFormClient() {
                     <input 
                       {...register('functionStartTime')}
                       type="time"
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-4 text-white focus:border-brand/50 transition-all [color-scheme:dark]"
+                      className={cn(
+                        "w-full bg-white/5 border rounded-2xl px-4 py-4 text-white transition-all [color-scheme:dark] outline-none",
+                        errors.functionStartTime 
+                          ? "border-rose-500/50 focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10" 
+                          : "border-white/10 focus:border-brand focus:ring-4 focus:ring-brand/5"
+                      )}
                     />
+                    {errors.functionStartTime && <p className="text-rose-500 text-xs px-1 mt-1 font-bold">{errors.functionStartTime.message}</p>}
                   </div>
                   <div className="space-y-3">
                     <label className="text-white/40 text-[10px] font-black uppercase tracking-widest px-1">End Time</label>
                     <input 
                       {...register('functionEndTime')}
                       type="time"
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-4 text-white focus:border-brand/50 transition-all [color-scheme:dark]"
+                      className={cn(
+                        "w-full bg-white/5 border rounded-2xl px-4 py-4 text-white transition-all [color-scheme:dark] outline-none",
+                        errors.functionEndTime 
+                          ? "border-rose-500/50 focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10" 
+                          : "border-white/10 focus:border-brand focus:ring-4 focus:ring-brand/5"
+                      )}
                     />
+                    {errors.functionEndTime && <p className="text-rose-500 text-xs px-1 mt-1 font-bold">{errors.functionEndTime.message}</p>}
                   </div>
                 </div>
               </div>
@@ -200,17 +228,29 @@ export default function BookingFormClient() {
                     <input 
                       {...register('functionLocation')}
                       placeholder="City, State"
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl pl-14 pr-6 py-4 text-white focus:border-brand/50 transition-all"
+                      className={cn(
+                        "w-full bg-white/5 border rounded-2xl pl-14 pr-6 py-4 text-white transition-all outline-none",
+                        errors.functionLocation 
+                          ? "border-rose-500/50 focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10" 
+                          : "border-white/10 focus:border-brand focus:ring-4 focus:ring-brand/5"
+                      )}
                     />
                   </div>
+                  {errors.functionLocation && <p className="text-rose-500 text-xs px-1 mt-1 font-bold">{errors.functionLocation.message}</p>}
                 </div>
                 <div className="space-y-3">
                   <label className="text-white/40 text-[10px] font-black uppercase tracking-widest px-1">Specific Venue</label>
                   <input 
                     {...register('venue')}
                     placeholder="Hotel Name / Convention Center"
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-brand/50 transition-all"
+                    className={cn(
+                      "w-full bg-white/5 border rounded-2xl px-6 py-4 text-white transition-all outline-none",
+                      errors.venue 
+                        ? "border-rose-500/50 focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10" 
+                        : "border-white/10 focus:border-brand focus:ring-4 focus:ring-brand/5"
+                    )}
                   />
+                  {errors.venue && <p className="text-rose-500 text-xs px-1 mt-1 font-bold">{errors.venue.message}</p>}
                 </div>
               </div>
             </div>
@@ -221,14 +261,19 @@ export default function BookingFormClient() {
             <div className="space-y-10">
               <div className="space-y-4">
                 <label className="text-white/40 text-[10px] font-black uppercase tracking-widest px-1">Wedding Tradition</label>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className={cn(
+                  "grid grid-cols-2 md:grid-cols-4 gap-4 p-1 rounded-3xl transition-all",
+                  errors.weddingTradition && "border border-rose-500/20 bg-rose-500/5 p-4"
+                )}>
                   {['Muslim Wedding', 'Hindu Wedding', 'Christian Wedding', 'Other Tradition'].map((t) => (
                     <button
                       key={t}
                       type="button"
-                      onClick={() => setValue('weddingTradition', t as any)}
+                      onClick={() => {
+                        setValue('weddingTradition', t as any, { shouldValidate: true });
+                      }}
                       className={cn(
-                        "px-4 py-4 rounded-2xl border text-[10px] font-bold transition-all",
+                        "px-4 py-4 rounded-2xl border text-[10px] font-bold transition-all cursor-pointer",
                         weddingTradition === t ? "bg-brand border-brand text-black shadow-lg shadow-brand/20" : "bg-white/5 border-white/5 text-white/40 hover:border-white/20"
                       )}
                     >
@@ -236,19 +281,23 @@ export default function BookingFormClient() {
                     </button>
                   ))}
                 </div>
+                {errors.weddingTradition && <p className="text-rose-500 text-xs px-1 mt-1 font-bold">{errors.weddingTradition.message}</p>}
               </div>
               
               <div className="grid md:grid-cols-2 gap-12">
                 <div className="space-y-4">
                   <label className="text-white/40 text-[10px] font-black uppercase tracking-widest px-1">Function Type</label>
-                  <div className="flex flex-wrap gap-3">
+                  <div className={cn(
+                    "flex flex-wrap gap-3 p-1 rounded-3xl transition-all",
+                    errors.functionType && "border border-rose-500/20 bg-rose-500/5 p-4"
+                  )}>
                     {['Nikkah', 'Wedding', 'Reception'].map((f) => (
                       <button
                         key={f}
                         type="button"
-                        onClick={() => setValue('functionType', f as any)}
+                        onClick={() => setValue('functionType', f as any, { shouldValidate: true })}
                         className={cn(
-                          "px-6 py-3 rounded-full border text-[10px] font-black uppercase tracking-widest transition-all",
+                          "px-6 py-3 rounded-full border text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer",
                           functionType === f ? "bg-brand border-brand text-black" : "bg-white/5 border-white/5 text-white/40"
                         )}
                       >
@@ -256,17 +305,21 @@ export default function BookingFormClient() {
                       </button>
                     ))}
                   </div>
+                  {errors.functionType && <p className="text-rose-500 text-xs px-1 mt-1 font-bold">{errors.functionType.message}</p>}
                 </div>
                 <div className="space-y-4">
                   <label className="text-white/40 text-[10px] font-black uppercase tracking-widest px-1">Schedule Preference</label>
-                  <div className="flex gap-4">
+                  <div className={cn(
+                    "flex gap-4 p-1 rounded-2xl transition-all",
+                    errors.programSchedule && "border border-rose-500/20 bg-rose-500/5 p-4"
+                  )}>
                     {['Day', 'Night'].map((s) => (
                       <button
                         key={s}
                         type="button"
-                        onClick={() => setValue('programSchedule', s as any)}
+                        onClick={() => setValue('programSchedule', s as any, { shouldValidate: true })}
                         className={cn(
-                          "flex-1 py-3 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all",
+                          "flex-1 py-3 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer",
                           programSchedule === s ? "bg-white text-black border-white" : "bg-white/5 border-white/5 text-white/40"
                         )}
                       >
@@ -274,6 +327,7 @@ export default function BookingFormClient() {
                       </button>
                     ))}
                   </div>
+                  {errors.programSchedule && <p className="text-rose-500 text-xs px-1 mt-1 font-bold">{errors.programSchedule.message}</p>}
                 </div>
               </div>
             </div>
@@ -304,14 +358,17 @@ export default function BookingFormClient() {
               <div className="grid md:grid-cols-2 gap-12">
                 <div className="space-y-4">
                   <label className="text-white/40 text-[10px] font-black uppercase tracking-widest px-1">Total Function Days</label>
-                  <div className="flex gap-3">
+                  <div className={cn(
+                    "flex gap-3 p-1 rounded-2xl transition-all",
+                    errors.functionDays && "border border-rose-500/20 bg-rose-500/5 p-4"
+                  )}>
                     {['1', '2', '3', 'Other'].map((d) => (
                       <button
                         key={d}
                         type="button"
-                        onClick={() => setValue('functionDays', d as any)}
+                        onClick={() => setValue('functionDays', d as any, { shouldValidate: true })}
                         className={cn(
-                          "w-12 h-12 rounded-xl border flex items-center justify-center font-bold transition-all",
+                          "w-12 h-12 rounded-xl border flex items-center justify-center font-bold transition-all cursor-pointer",
                           functionDays === d ? "bg-white text-black border-white shadow-xl" : "bg-white/5 border-white/5 text-white/40"
                         )}
                       >
@@ -319,17 +376,21 @@ export default function BookingFormClient() {
                       </button>
                     ))}
                   </div>
+                  {errors.functionDays && <p className="text-rose-500 text-xs px-1 mt-1 font-bold">{errors.functionDays.message}</p>}
                 </div>
                 <div className="space-y-4">
                   <label className="text-white/40 text-[10px] font-black uppercase tracking-widest px-1">Atmosphere</label>
-                  <div className="flex gap-4">
+                  <div className={cn(
+                    "flex gap-4 p-1 rounded-2xl transition-all",
+                    errors.functionPlannedAt && "border border-rose-500/20 bg-rose-500/5 p-4"
+                  )}>
                     {['Outdoor', 'Indoor'].map((p) => (
                       <button
                         key={p}
                         type="button"
-                        onClick={() => setValue('functionPlannedAt', p as any)}
+                        onClick={() => setValue('functionPlannedAt', p as any, { shouldValidate: true })}
                         className={cn(
-                          "flex-1 py-3 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all",
+                          "flex-1 py-3 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer",
                           functionPlannedAt === p ? "bg-white/10 border-brand text-brand" : "bg-white/5 border-white/5 text-white/40"
                         )}
                       >
@@ -337,6 +398,7 @@ export default function BookingFormClient() {
                       </button>
                     ))}
                   </div>
+                  {errors.functionPlannedAt && <p className="text-rose-500 text-xs px-1 mt-1 font-bold">{errors.functionPlannedAt.message}</p>}
                 </div>
               </div>
             </div>
@@ -372,10 +434,15 @@ export default function BookingFormClient() {
                       type="number"
                       {...register('estimatedBudget', { valueAsNumber: true })}
                       placeholder="Amount in INR"
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl pl-14 pr-6 py-4 text-white font-bold focus:border-brand transition-all"
+                      className={cn(
+                        "w-full bg-white/5 border rounded-2xl pl-14 pr-6 py-4 text-white font-bold transition-all outline-none",
+                        errors.estimatedBudget 
+                          ? "border-rose-500/50 focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10" 
+                          : "border-white/10 focus:border-brand focus:ring-4 focus:ring-brand/5"
+                      )}
                     />
                   </div>
-                  {errors.estimatedBudget && <p className="text-red-500 text-xs">{errors.estimatedBudget.message}</p>}
+                  {errors.estimatedBudget && <p className="text-rose-500 text-xs px-1 mt-1 font-bold">{errors.estimatedBudget.message}</p>}
                 </div>
               </div>
               <div className="space-y-4">
@@ -399,29 +466,44 @@ export default function BookingFormClient() {
                   <input 
                     {...register('contactNumber')}
                     placeholder="+91 XXX XXX XXXX"
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-brand transition-all"
+                    className={cn(
+                      "w-full bg-white/5 border rounded-2xl px-6 py-4 text-white transition-all outline-none",
+                      errors.contactNumber 
+                        ? "border-rose-500/50 focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10" 
+                        : "border-white/10 focus:border-brand focus:ring-4 focus:ring-brand/5"
+                    )}
                   />
+                  {errors.contactNumber && <p className="text-rose-500 text-xs px-1 mt-1 font-bold">{errors.contactNumber.message}</p>}
                 </div>
                 <div className="space-y-3">
                   <label className="text-white/40 text-[10px] font-black uppercase tracking-widest px-1">WhatsApp Number</label>
                   <input 
                     {...register('whatsappNumber')}
                     placeholder="+91 XXX XXX XXXX"
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-brand transition-all"
+                    className={cn(
+                      "w-full bg-white/5 border rounded-2xl px-6 py-4 text-white transition-all outline-none",
+                      errors.whatsappNumber 
+                        ? "border-rose-500/50 focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10" 
+                        : "border-white/10 focus:border-brand focus:ring-4 focus:ring-brand/5"
+                    )}
                   />
+                  {errors.whatsappNumber && <p className="text-rose-500 text-xs px-1 mt-1 font-bold">{errors.whatsappNumber.message}</p>}
                 </div>
               </div>
 
               <div className="space-y-6">
                 <label className="text-white/40 text-[10px] font-black uppercase tracking-widest px-1">Preferred Consultation Method</label>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                <div className={cn(
+                  "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 p-1 rounded-2xl transition-all",
+                  errors.preferredCommunicationMethod && "border border-rose-500/20 bg-rose-500/5 p-4"
+                )}>
                   {['Phone Call', 'WhatsApp', 'Email', 'Botim', 'Google Meet', 'Zoom'].map((m) => (
                     <button
                       key={m}
                       type="button"
-                      onClick={() => setValue('preferredCommunicationMethod', m as any)}
+                      onClick={() => setValue('preferredCommunicationMethod', m as any, { shouldValidate: true })}
                       className={cn(
-                        "py-4 rounded-2xl border text-[10px] font-black uppercase tracking-tighter transition-all",
+                        "py-4 rounded-2xl border text-[10px] font-black uppercase tracking-tighter transition-all cursor-pointer",
                         preferredComm === m ? "bg-brand border-brand text-black shadow-lg shadow-brand/20" : "bg-white/5 border-white/5 text-white/40 hover:border-white/20"
                       )}
                     >
@@ -429,7 +511,7 @@ export default function BookingFormClient() {
                     </button>
                   ))}
                 </div>
-                {errors.preferredCommunicationMethod && <p className="text-red-500 text-xs">{errors.preferredCommunicationMethod.message}</p>}
+                {errors.preferredCommunicationMethod && <p className="text-rose-500 text-xs px-1 mt-1 font-bold">{errors.preferredCommunicationMethod.message}</p>}
               </div>
             </div>
           </FormSection>

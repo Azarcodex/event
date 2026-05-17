@@ -7,8 +7,8 @@ export class BookingService {
     return await bookingRepository.create(validatedData);
   }
 
-  async getAllBookings(page?: number, limit?: number, search?: string) {
-    return await bookingRepository.findAll(page, limit, search);
+  async getAllBookings(page?: number, limit?: number, search?: string, status?: string) {
+    return await bookingRepository.findAll(page, limit, search, status);
   }
 
   async getBookingById(id: string) {
@@ -17,6 +17,14 @@ export class BookingService {
       throw new Error('Booking not found');
     }
     return booking;
+  }
+
+  async updateBooking(id: string, data: any) {
+    const booking = await bookingRepository.findById(id);
+    if (!booking) {
+      throw new Error('Booking not found');
+    }
+    return await bookingRepository.updateById(id, data);
   }
 
   async deleteBooking(id: string) {

@@ -6,19 +6,25 @@ export class BookingRepository {
     return await newBooking.save();
   }
 
-  async findAll(page: number = 1, limit: number = 10, search?: string) {
+  async findAll(page: number = 1, limit: number = 10, search?: string, status?: string) {
     const skip = (page - 1) * limit;
     
-    let query = {};
+    let query: any = {};
     if (search) {
-      query = {
-        $or: [
-          { groomName: { $regex: search, $options: 'i' } },
-          { brideName: { $regex: search, $options: 'i' } },
-          { contactNumber: { $regex: search, $options: 'i' } },
-          { functionLocation: { $regex: search, $options: 'i' } },
-        ],
-      };
+      query.$or = [
+        { groomName: { $regex: search, $options: 'i' } },
+        { brideName: { $regex: search, $options: 'i' } },
+        { contactNumber: { $regex: search, $options: 'i' } },
+        { functionLocation: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    if (status && status !== 'All') {
+      if (status === 'Completed') {
+        query.status = 'Completed';
+      } else if (status === 'Not Completed') {
+        query.status = { $ne: 'Completed' };
+      }
     }
 
     const [bookings, total] = await Promise.all([
@@ -36,6 +42,10 @@ export class BookingRepository {
 
   async findById(id: string) {
     return await Booking.findById(id).exec();
+  }
+
+  async updateById(id: string, updateData: any) {
+    return await Booking.findByIdAndUpdate(id, updateData, { new: true }).exec();
   }
 
   async deleteById(id: string) {

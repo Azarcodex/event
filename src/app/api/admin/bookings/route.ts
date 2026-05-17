@@ -22,9 +22,10 @@ export async function GET(req: Request) {
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
     const search = searchParams.get('search') || '';
+    const status = searchParams.get('status') || '';
 
     await dbConnect();
-    const result = await bookingService.getAllBookings(page, limit, search);
+    const result = await bookingService.getAllBookings(page, limit, search, status);
     
     return NextResponse.json(result, { status: 200 });
   } catch (error: any) {

@@ -2,18 +2,16 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAdminBookings, useDeleteBooking } from '@/hooks/useBookings';
+import { useAdminBookings, useDeleteBooking, useUpdateBookingStatus } from '@/hooks/useBookings';
 import { 
-  Search, 
   Trash2, 
   Eye, 
   ChevronLeft, 
   ChevronRight, 
   Loader2, 
   Calendar,
-  Users,
   IndianRupee,
-  MessageSquare
+  CheckCircle2
 } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -21,20 +19,13 @@ import { IBooking } from '@/types/booking';
 
 export default function BookingsManagementClient() {
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [filter, setFilter] = useState<'All' | 'Completed' | 'Not Completed'>('All');
   
   const limit = 10;
   
-  const { data, isLoading } = useAdminBookings(page, limit, debouncedSearch);
-  const { mutate: deleteBooking, isPending: isDeleting } = useDeleteBooking();
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-    // Debounce search manually or with a library. Simple timeout for now.
-    const timeout = setTimeout(() => setDebouncedSearch(e.target.value), 500);
-    return () => clearTimeout(timeout);
-  };
+  const { data, isLoading } = useAdminBookings(page, limit, '', filter);
+  const { mutate: deleteBooking } = useDeleteBooking();
+  const { mutate: updateStatus } = useUpdateBookingStatus();
 
   const handleDelete = (id: string) => {
     if (confirm('Are you sure you want to delete this booking inquiry?')) {
@@ -42,25 +33,43 @@ export default function BookingsManagementClient() {
     }
   };
 
+  const handleToggleStatus = (id: string, currentStatus?: 'Pending' | 'Completed') => {
+    const newStatus = currentStatus === 'Completed' ? 'Pending' : 'Completed';
+    
+    const message = newStatus === 'Completed'
+      ? 'Are you sure you want to mark this booking as Completed?'
+      : 'Are you sure you want to mark this booking as Not Completed (Pending)?';
+      
+    if (confirm(message)) {
+      updateStatus({ id, status: newStatus });
+    }
+  };
+
   return (
     <div className="space-y-6">
-      {/* Search Bar */}
-      <div className="relative max-w-md group">
-        <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-brand transition-colors" />
-        <input 
-          type="text"
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            // Simple immediate debounced effect
-          }}
-          onKeyUp={(e) => {
-            if (e.key === 'Enter') setDebouncedSearch(search);
-          }}
-          onBlur={() => setDebouncedSearch(search)}
-          placeholder="Search by name, location..."
-          className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl py-3.5 pl-12 pr-4 text-white focus:border-brand/50 focus:ring-4 focus:ring-brand/5 transition-all outline-none"
-        />
+      {/* Filter Tabs */}
+      <div className="flex border-b border-zinc-800/80 gap-6">
+        {[
+          { label: 'All Bookings', value: 'All' },
+          { label: 'Completed', value: 'Completed' },
+          { label: 'Not Completed', value: 'Not Completed' }
+        ].map((tab) => (
+          <button
+            key={tab.value}
+            onClick={() => {
+              setFilter(tab.value as any);
+              setPage(1);
+            }}
+            className={cn(
+              "pb-4 px-2 text-xs font-black uppercase tracking-widest border-b-2 transition-all cursor-pointer outline-none",
+              filter === tab.value
+                ? "border-brand text-brand"
+                : "border-transparent text-zinc-500 hover:text-zinc-300"
+            )}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
 
       {/* Table Container */}
@@ -74,6 +83,7 @@ export default function BookingsManagementClient() {
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-zinc-500">Contact</th>
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-zinc-500 text-center">Guests</th>
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-zinc-500">Budget</th>
+                <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-zinc-500">Status</th>
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-zinc-500 text-right">Actions</th>
               </tr>
             </thead>
@@ -81,7 +91,7 @@ export default function BookingsManagementClient() {
               <AnimatePresence mode="popLayout">
                 {isLoading ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-20 text-center">
+                    <td colSpan={7} className="px-6 py-20 text-center">
                       <div className="flex flex-col items-center gap-4">
                         <Loader2 className="animate-spin text-brand" size={32} />
                         <span className="text-zinc-500 font-bold uppercase tracking-widest text-[10px]">Loading Bookings...</span>
@@ -90,7 +100,7 @@ export default function BookingsManagementClient() {
                   </tr>
                 ) : data?.bookings.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-20 text-center">
+                    <td colSpan={7} className="px-6 py-20 text-center">
                       <div className="flex flex-col items-center gap-4 text-zinc-600">
                         <Calendar size={48} className="opacity-20" />
                         <span className="font-bold uppercase tracking-widest text-xs">No bookings found</span>
@@ -137,6 +147,29 @@ export default function BookingsManagementClient() {
                           <IndianRupee size={14} />
                           {booking.estimatedBudget.toLocaleString()}
                         </div>
+                      </td>
+                      <td className="px-6 py-5">
+                        <button
+                          onClick={() => handleToggleStatus(booking._id, booking.status)}
+                          className={cn(
+                            "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center gap-2 cursor-pointer",
+                            booking.status === 'Completed'
+                              ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-black hover:border-emerald-500"
+                              : "bg-zinc-800/30 border-zinc-800 text-zinc-500 hover:border-zinc-750 hover:text-zinc-300"
+                          )}
+                        >
+                          {booking.status === 'Completed' ? (
+                            <>
+                              <CheckCircle2 size={12} className="text-emerald-400 shrink-0" />
+                              Completed
+                            </>
+                          ) : (
+                            <>
+                              <div className="w-1.5 h-1.5 rounded-full bg-zinc-600 shrink-0" />
+                              Not Completed
+                            </>
+                          )}
+                        </button>
                       </td>
                       <td className="px-6 py-5">
                         <div className="flex items-center justify-end gap-2">

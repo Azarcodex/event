@@ -16,10 +16,10 @@ export const useCreateBooking = () => {
   });
 };
 
-export const useAdminBookings = (page: number, limit: number, search: string) => {
+export const useAdminBookings = (page: number, limit: number, search: string, status: string = '') => {
   return useQuery({
-    queryKey: ['bookings', page, limit, search],
-    queryFn: () => bookingApi.getAllBookings(page, limit, search),
+    queryKey: ['bookings', page, limit, search, status],
+    queryFn: () => bookingApi.getAllBookings(page, limit, search, status),
   });
 };
 
@@ -28,6 +28,21 @@ export const useBookingDetails = (id: string) => {
     queryKey: ['bookings', id],
     queryFn: () => bookingApi.getBookingById(id),
     enabled: !!id,
+  });
+};
+
+export const useUpdateBookingStatus = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, status }: { id: string; status: 'Pending' | 'Completed' }) =>
+      bookingApi.updateBookingStatus(id, status),
+    onSuccess: () => {
+      toast.success('Booking status updated successfully!');
+      queryClient.invalidateQueries({ queryKey: ['bookings'] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to update booking status');
+    },
   });
 };
 

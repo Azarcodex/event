@@ -21,6 +21,7 @@ export interface IBookingDocument extends Document {
   expectedGuests: number;
   estimatedBudget: number;
   preferredCommunicationMethod: string;
+  status: 'Pending' | 'Completed';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -70,6 +71,12 @@ const BookingSchema = new Schema<IBookingDocument>(
       type: String,
       required: true,
       enum: ['Phone Call', 'WhatsApp', 'Email', 'Botim', 'Google Meet', 'Zoom'],
+    },
+    status: {
+      type: String,
+      enum: ['Pending', 'Completed'],
+      default: 'Pending',
+      required: true
     },
   },
   { timestamps: true }
