@@ -1,28 +1,18 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import dbConnect from '@/lib/mongodb';
 import { bookingService } from '@/services/booking.service';
-import { adminService } from '@/services/admin.service';
-
-async function checkAdmin() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('admin_token')?.value;
-
-  if (!token) return null;
-  return await adminService.getMe(token);
-}
+import { verifyApiPermission } from '@/lib/api-auth';
+import { BOOKING_STATUSES, BOOKING_SERVICES } from '@/types/booking';
 
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
-    const admin = await checkAdmin();
-    if (!admin) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
+    const { errorResponse } = await verifyApiPermission('bookings_management');
+    if (errorResponse) return errorResponse;
 
+    const { id } = await params;
     await dbConnect();
     const booking = await bookingService.getBookingById(id);
     
@@ -40,12 +30,10 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
-    const admin = await checkAdmin();
-    if (!admin) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
+    const { errorResponse } = await verifyApiPermission('bookings_management');
+    if (errorResponse) return errorResponse;
 
+    const { id } = await params;
     await dbConnect();
     await bookingService.deleteBooking(id);
     
@@ -63,21 +51,31 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { errorResponse } = await verifyApiPermission('bookings_management');
+    if (errorResponse) return errorResponse;
+
     const { id } = await params;
-    const admin = await checkAdmin();
-    if (!admin) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    const body = await req.json();
+    const { status, services } = body;
+
+    const updateData: any = {};
+
+    if (status !== undefined) {
+      if (!BOOKING_STATUSES.includes(status)) {
+        return NextResponse.json({ message: 'Invalid status' }, { status: 400 });
+      }
+      updateData.status = status;
     }
 
-    const body = await req.json();
-    const { status } = body;
-
-    if (status !== 'Pending' && status !== 'Completed') {
-      return NextResponse.json({ message: 'Invalid status' }, { status: 400 });
+    if (services !== undefined) {
+      if (!Array.isArray(services) || services.some(s => !BOOKING_SERVICES.includes(s as any))) {
+        return NextResponse.json({ message: 'Invalid services' }, { status: 400 });
+      }
+      updateData.services = services;
     }
 
     await dbConnect();
-    const updatedBooking = await bookingService.updateBooking(id, { status });
+    const updatedBooking = await bookingService.updateBooking(id, updateData);
 
     return NextResponse.json(updatedBooking, { status: 200 });
   } catch (error: any) {

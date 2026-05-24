@@ -11,7 +11,8 @@ import {
   Image as ImageIcon,
   X,
   MessageSquare,
-  Calendar
+  Calendar,
+  Users
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -22,15 +23,17 @@ const navItems = [
   { label: 'Banner Management', href: '/admin/banner-management', icon: ImageIcon },
   { label: 'Reviews Management', href: '/admin/reviews', icon: MessageSquare },
   { label: 'Event Bookings', href: '/admin/bookings', icon: Calendar },
+  { label: 'Manage Admins', href: '/admin/manage-admins', icon: Users },
   { label: 'Settings', href: '/admin/settings', icon: Settings },
 ];
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  admin?: any;
 }
 
-export function Sidebar({ isOpen, onClose }: SidebarProps) {
+export function Sidebar({ isOpen, onClose, admin }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -42,6 +45,20 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       toast.error('Failed to logout');
     }
   };
+
+  // Filter navigation links based on role-based permission controls
+  const filteredNavItems = navItems.filter((item) => {
+    if (item.href === '/admin/manage-admins' || item.href === '/admin/settings') {
+      return admin?.role === 'superadmin';
+    }
+    if (item.href === '/admin/media-management' || item.href === '/admin/banner-management') {
+      return admin?.role === 'superadmin' || admin?.permissions?.includes('media_management');
+    }
+    if (item.href === '/admin/bookings' || item.href === '/admin/reviews') {
+      return admin?.role === 'superadmin' || admin?.permissions?.includes('bookings_management');
+    }
+    return true; // Dashboard is visible to all admins
+  });
 
   return (
     <aside className={cn(
@@ -72,7 +89,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Menu</p>
         </div>
         
-        {navItems.map((item) => {
+        {filteredNavItems.map((item) => {
           const isActive = pathname === item.href;
           return (
             <Link

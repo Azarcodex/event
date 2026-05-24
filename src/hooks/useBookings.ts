@@ -16,10 +16,11 @@ export const useCreateBooking = () => {
   });
 };
 
-export const useAdminBookings = (page: number, limit: number, search: string, status: string = '') => {
+export const useAdminBookings = (page: number, limit: number, search: string, status: string = '', service: string = '') => {
   return useQuery({
-    queryKey: ['bookings', page, limit, search, status],
-    queryFn: () => bookingApi.getAllBookings(page, limit, search, status),
+    queryKey: ['bookings', page, limit, search, status, service],
+    queryFn: () => bookingApi.getAllBookings(page, limit, search, status, service),
+    refetchInterval: 5000, // Auto-refresh every 5 seconds for live updates
   });
 };
 
@@ -31,17 +32,17 @@ export const useBookingDetails = (id: string) => {
   });
 };
 
-export const useUpdateBookingStatus = () => {
+export const useUpdateBookingFields = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, status }: { id: string; status: 'Pending' | 'Completed' }) =>
-      bookingApi.updateBookingStatus(id, status),
+    mutationFn: ({ id, data }: { id: string; data: { status?: string; services?: string[] } }) =>
+      bookingApi.updateBookingFields(id, data),
     onSuccess: () => {
-      toast.success('Booking status updated successfully!');
+      toast.success('Booking updated successfully!');
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Failed to update booking status');
+      toast.error(error.response?.data?.message || 'Failed to update booking');
     },
   });
 };

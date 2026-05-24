@@ -21,7 +21,8 @@ export interface IBookingDocument extends Document {
   expectedGuests: number;
   estimatedBudget: number;
   preferredCommunicationMethod: string;
-  status: 'Pending' | 'Completed';
+  status: string;
+  services: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -74,13 +75,48 @@ const BookingSchema = new Schema<IBookingDocument>(
     },
     status: {
       type: String,
-      enum: ['Pending', 'Completed'],
-      default: 'Pending',
+      enum: [
+        'Event Confirm',
+        'Full Advance',
+        'Advance',
+        'Verbal Commitment',
+        'Followup',
+        'Not Interested',
+        'Bad Fit for us',
+        'Meeting Recheduled',
+        'Cancelled',
+        '1 st meeting done',
+        'Not responding',
+        'Contact Watsapp',
+        '2 nd meeting done',
+        'Contacted'
+      ],
+      default: 'Followup',
       required: true
     },
+    services: {
+      type: [String],
+      enum: [
+        'Estimate',
+        'Check List',
+        'Quatation',
+        'Food Menu',
+        'Invoice',
+        'Presentation',
+        'Mood Board',
+        'Nothing',
+        'Stage Design',
+        'Presentation & Quat'
+      ],
+      default: []
+    }
   },
   { timestamps: true }
 );
+
+if (mongoose.models.Booking) {
+  delete (mongoose.models as any).Booking;
+}
 
 const Booking: Model<IBookingDocument> =
   mongoose.models.Booking || mongoose.model<IBookingDocument>('Booking', BookingSchema);

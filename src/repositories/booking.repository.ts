@@ -6,7 +6,7 @@ export class BookingRepository {
     return await newBooking.save();
   }
 
-  async findAll(page: number = 1, limit: number = 10, search?: string, status?: string) {
+  async findAll(page: number = 1, limit: number = 10, search?: string, status?: string, service?: string) {
     const skip = (page - 1) * limit;
     
     let query: any = {};
@@ -20,11 +20,11 @@ export class BookingRepository {
     }
 
     if (status && status !== 'All') {
-      if (status === 'Completed') {
-        query.status = 'Completed';
-      } else if (status === 'Not Completed') {
-        query.status = { $ne: 'Completed' };
-      }
+      query.status = status;
+    }
+
+    if (service && service !== 'All') {
+      query.services = service;
     }
 
     const [bookings, total] = await Promise.all([

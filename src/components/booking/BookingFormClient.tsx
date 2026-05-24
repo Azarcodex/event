@@ -28,6 +28,21 @@ const ADDON_FUNCTIONS = [
   'Arikuth', 'Madhuram Veppu', 'Chandam Charthu', 'Engagement'
 ];
 
+const FormSection = ({ title, icon: Icon, children }: { title: string, icon: any, children: React.ReactNode }) => (
+  <div className="space-y-8 py-10 border-b border-white/5 last:border-0">
+    <div className="flex items-center gap-4 mb-8">
+      <div className="w-12 h-12 bg-brand/10 rounded-2xl flex items-center justify-center text-brand">
+        <Icon size={24} />
+      </div>
+      <div>
+        <h3 className="text-xl font-bold text-white tracking-tight">{title}</h3>
+        <p className="text-[10px] text-white/40 font-black uppercase tracking-widest mt-1">Please provide accurate details</p>
+      </div>
+    </div>
+    {children}
+  </div>
+);
+
 export default function BookingFormClient() {
   const { mutate: submitBooking, isPending, isSuccess } = useCreateBooking();
 
@@ -93,21 +108,6 @@ export default function BookingFormClient() {
       </div>
     );
   }
-
-  const FormSection = ({ title, icon: Icon, children }: { title: string, icon: any, children: React.ReactNode }) => (
-    <div className="space-y-8 py-10 border-b border-white/5 last:border-0">
-      <div className="flex items-center gap-4 mb-8">
-        <div className="w-12 h-12 bg-brand/10 rounded-2xl flex items-center justify-center text-brand">
-          <Icon size={24} />
-        </div>
-        <div>
-          <h3 className="text-xl font-bold text-white tracking-tight">{title}</h3>
-          <p className="text-[10px] text-white/40 font-black uppercase tracking-widest mt-1">Please provide accurate details</p>
-        </div>
-      </div>
-      {children}
-    </div>
-  );
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-20 relative">

@@ -24,6 +24,16 @@ const AdminSchema = new mongoose.Schema(
       enum: ['admin', 'superadmin'],
       default: 'admin',
     },
+    permissions: {
+      type: [String],
+      enum: ['media_management', 'bookings_management'],
+      default: [],
+    },
+    status: {
+      type: String,
+      enum: ['active', 'inactive'],
+      default: 'active',
+    },
     phoneNumber: {
       type: String,
       trim: true,
@@ -47,5 +57,9 @@ AdminSchema.pre('save', async function () {
 AdminSchema.methods.comparePassword = async function (candidatePassword: string) {
   return bcrypt.compare(candidatePassword, this.password);
 };
+
+if (mongoose.models.AdminUser) {
+  delete (mongoose.models as any).AdminUser;
+}
 
 export default mongoose.models.AdminUser || mongoose.model('AdminUser', AdminSchema);

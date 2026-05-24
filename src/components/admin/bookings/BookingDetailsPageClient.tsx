@@ -1,6 +1,6 @@
 'use client';
 
-import { useBookingDetails, useDeleteBooking } from '@/hooks/useBookings';
+import { useBookingDetails, useDeleteBooking, useUpdateBookingFields } from '@/hooks/useBookings';
 import { useParams, useRouter } from 'next/navigation';
 import { 
   ArrowLeft, 
@@ -17,12 +17,15 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { BOOKING_STATUSES, BOOKING_SERVICES, BookingStatus, BookingService } from '@/types/booking';
+import { getStatusColor } from './BookingsManagementClient';
 
 export default function BookingDetailsPageClient() {
   const { id } = useParams();
   const router = useRouter();
   const { data: booking, isLoading } = useBookingDetails(id as string);
   const { mutate: deleteBooking, isPending: isDeleting } = useDeleteBooking();
+  const { mutate: updateBooking, isPending: isUpdating } = useUpdateBookingFields();
 
   const handleBack = () => {
     router.push('/admin/bookings');
@@ -34,6 +37,20 @@ export default function BookingDetailsPageClient() {
         onSuccess: () => router.push('/admin/bookings')
       });
     }
+  };
+
+  const handleStatusChange = (newStatus: BookingStatus) => {
+    updateBooking({ id: id as string, data: { status: newStatus } });
+  };
+
+  const handleServiceToggle = (service: BookingService) => {
+    if (!booking) return;
+    const currentServices = booking.services || [];
+    const newServices = currentServices.includes(service)
+      ? currentServices.filter((s: string) => s !== service)
+      : [...currentServices, service];
+    
+    updateBooking({ id: id as string, data: { services: newServices } });
   };
 
   if (isLoading) {
@@ -55,6 +72,15 @@ export default function BookingDetailsPageClient() {
       </div>
     );
   }
+
+  // Safe legacy mapping for old status fields
+  const normalizedStatus = (
+    booking.status === ('Pending' as any)
+      ? 'Followup'
+      : booking.status === ('Completed' as any)
+      ? 'Event Confirm'
+      : booking.status || 'Followup'
+  ) as BookingStatus;
 
   const DetailSection = ({ icon: Icon, title, children }: { icon: any, title: string, children: React.ReactNode }) => (
     <div className="bg-zinc-900/30 border border-zinc-800 rounded-[2rem] p-8 space-y-6 backdrop-blur-sm">
@@ -93,7 +119,25 @@ export default function BookingDetailsPageClient() {
             <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-0.5">Ref: {booking._id.slice(-8)}</p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        
+        <div className="flex items-center gap-3 flex-wrap">
+          {/* Status Dropdown */}
+          <select
+            value={normalizedStatus}
+            onChange={(e) => handleStatusChange(e.target.value as BookingStatus)}
+            disabled={isUpdating}
+            className={cn(
+              "px-4 py-3 rounded-2xl text-xs font-black uppercase tracking-widest border transition-all cursor-pointer bg-zinc-950 text-white outline-none focus:ring-1 focus:ring-brand/50",
+              getStatusColor(normalizedStatus)
+            )}
+          >
+            {BOOKING_STATUSES.map((status) => (
+              <option key={status} value={status} className="bg-zinc-950 text-zinc-300 font-sans normal-case tracking-normal">
+                {status}
+              </option>
+            ))}
+          </select>
+
           <button 
             onClick={handleDelete}
             disabled={isDeleting}
@@ -112,6 +156,45 @@ export default function BookingDetailsPageClient() {
           <DataItem label="Groom's Name" value={booking.groomName} />
           <DataItem label="Bride's Name" value={booking.brideName} />
         </DetailSection>
+
+        {/* Assigned Services (Interactive Toggles) */}
+        <div className="bg-zinc-900/30 border border-zinc-800 rounded-[2rem] p-8 space-y-6 backdrop-blur-sm">
+          <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+            <div className="w-10 h-10 bg-brand/10 rounded-xl flex items-center justify-center">
+              <Sparkles size={20} className="text-brand" />
+            </div>
+            <div>
+              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-white">Event Services</h4>
+              <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1">Select the services provided for this booking</p>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2.5">
+            {BOOKING_SERVICES.map((service) => {
+              const isSelected = booking.services?.includes(service);
+              return (
+                <button
+                  key={service}
+                  onClick={() => handleServiceToggle(service)}
+                  disabled={isUpdating}
+                  className={cn(
+                    "px-4 py-2.5 rounded-2xl border text-xs font-bold transition-all cursor-pointer flex items-center gap-2 select-none",
+                    isSelected
+                      ? "bg-brand/10 border-brand text-brand"
+                      : "bg-white/5 border-white/5 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300"
+                  )}
+                >
+                  <div className={cn(
+                    "w-3.5 h-3.5 rounded border flex items-center justify-center transition-all",
+                    isSelected ? "bg-brand border-brand text-black" : "border-zinc-700"
+                  )}>
+                    {isSelected && <span className="text-[8px] font-black">✓</span>}
+                  </div>
+                  {service}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
         {/* Event Logistics */}
         <DetailSection icon={Calendar} title="Event Logistics">

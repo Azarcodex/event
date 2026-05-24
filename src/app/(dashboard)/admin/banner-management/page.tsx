@@ -1,8 +1,12 @@
 import BannerManagementClient from '@/components/admin/BannerManagementClient';
 import dbConnect from '@/lib/mongodb';
 import { mediaRepository } from '@/repositories/media.repository';
+import { enforcePermission } from '@/lib/auth-utils';
 
 export default async function BannerManagementPage() {
+  // Enforce media_management permission
+  await enforcePermission('media_management');
+
   await dbConnect();
   
   // Initially fetch some media, but the client will handle infinite scroll

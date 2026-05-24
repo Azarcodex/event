@@ -31,7 +31,7 @@ export function DashboardShell({ children, admin }: DashboardShellProps) {
   return (
     <div className="flex min-h-screen bg-[#09090b] selection:bg-indigo-500/30">
       {/* Sidebar - Desktop: Persistent, Mobile: Drawer */}
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} admin={admin} />
       
       {/* Overlay for mobile */}
       {isSidebarOpen && (

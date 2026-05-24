@@ -7,8 +7,8 @@ export class BookingService {
     return await bookingRepository.create(validatedData);
   }
 
-  async getAllBookings(page?: number, limit?: number, search?: string, status?: string) {
-    return await bookingRepository.findAll(page, limit, search, status);
+  async getAllBookings(page?: number, limit?: number, search?: string, status?: string, service?: string) {
+    return await bookingRepository.findAll(page, limit, search, status, service);
   }
 
   async getBookingById(id: string) {

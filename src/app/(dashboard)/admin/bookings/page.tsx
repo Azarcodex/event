@@ -1,12 +1,16 @@
 import BookingsManagementClient from '@/components/admin/bookings/BookingsManagementClient';
 import { Metadata } from 'next';
+import { enforcePermission } from '@/lib/auth-utils';
 
 export const metadata: Metadata = {
   title: 'Event Bookings Management | Admin Dashboard',
   description: 'Manage and review wedding and event booking inquiries.',
 };
 
-export default function AdminBookingsPage() {
+export default async function AdminBookingsPage() {
+  // Enforce bookings_management permission
+  await enforcePermission('bookings_management');
+
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

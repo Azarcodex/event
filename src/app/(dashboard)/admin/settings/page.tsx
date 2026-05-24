@@ -1,7 +1,5 @@
-import { cookies } from 'next/headers';
-import { adminService } from '@/services/admin.service';
 import { SettingsClient } from '@/components/admin/SettingsClient';
-import { redirect } from 'next/navigation';
+import { enforceSuperAdmin } from '@/lib/auth-utils';
 
 export const metadata = {
   title: 'Settings — Admin Panel',
@@ -9,18 +7,8 @@ export const metadata = {
 };
 
 export default async function SettingsPage() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('admin_token')?.value;
-
-  if (!token) {
-    redirect('/admin/login');
-  }
-
-  const admin = await adminService.getMe(token);
-
-  if (!admin) {
-    redirect('/admin/login');
-  }
+  // Enforce Super Admin access
+  const admin = await enforceSuperAdmin();
 
   return <SettingsClient admin={admin as any} />;
 }

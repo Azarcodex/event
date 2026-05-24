@@ -26,9 +26,23 @@ export class AdminRepository {
   }
 
   /**
+   * Fetch all admins
+   */
+  async findAll() {
+    return await Admin.find().sort({ createdAt: -1 }).exec();
+  }
+
+  /**
+   * Delete an admin by ID
+   */
+  async deleteById(id: string) {
+    return await Admin.findByIdAndDelete(id).exec();
+  }
+
+  /**
    * Create a new admin
    */
-  async create(data: RegisterInput) {
+  async create(data: any) {
     const newAdmin = new Admin(data);
     return await newAdmin.save();
   }

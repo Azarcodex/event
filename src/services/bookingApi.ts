@@ -13,8 +13,8 @@ export const bookingApi = {
   },
 
   // Admin
-  getAllBookings: async (page: number = 1, limit: number = 10, search: string = '', status: string = '') => {
-    const response = await api.get(`/admin/bookings?page=${page}&limit=${limit}&search=${search}&status=${status}`);
+  getAllBookings: async (page: number = 1, limit: number = 10, search: string = '', status: string = '', service: string = '') => {
+    const response = await api.get(`/admin/bookings?page=${page}&limit=${limit}&search=${search}&status=${status}&service=${service}`);
     return response.data;
   },
 
@@ -23,8 +23,8 @@ export const bookingApi = {
     return response.data;
   },
 
-  updateBookingStatus: async (id: string, status: 'Pending' | 'Completed') => {
-    const response = await api.patch(`/admin/bookings/${id}`, { status });
+  updateBookingFields: async (id: string, data: { status?: string; services?: string[] }) => {
+    const response = await api.patch(`/admin/bookings/${id}`, data);
     return response.data;
   },
 

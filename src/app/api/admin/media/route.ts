@@ -2,9 +2,13 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import { mediaService } from '@/services/media.service';
 import { mediaQuerySchema } from '@/lib/validators/media.validator';
+import { verifyApiPermission } from '@/lib/api-auth';
 
 export async function GET(req: Request) {
   try {
+    const { errorResponse } = await verifyApiPermission('media_management');
+    if (errorResponse) return errorResponse;
+
     await dbConnect();
     const { searchParams } = new URL(req.url);
 
@@ -33,6 +37,9 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    const { errorResponse } = await verifyApiPermission('media_management');
+    if (errorResponse) return errorResponse;
+
     await dbConnect();
 
     const contentType = req.headers.get('content-type') ?? '';

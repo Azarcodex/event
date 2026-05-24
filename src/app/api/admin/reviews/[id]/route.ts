@@ -1,27 +1,17 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import dbConnect from '@/lib/mongodb';
 import { reviewService } from '@/services/review.service';
-import { adminService } from '@/services/admin.service';
+import { verifyApiPermission } from '@/lib/api-auth';
 
 export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { errorResponse } = await verifyApiPermission('bookings_management');
+    if (errorResponse) return errorResponse;
+
     const { id } = await params;
-    const cookieStore = await cookies();
-    const token = cookieStore.get('admin_token')?.value;
-
-    if (!token) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
-    const admin = await adminService.getMe(token);
-    if (!admin) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
     await dbConnect();
     const review = await reviewService.approveReview(id);
 
@@ -42,19 +32,10 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { errorResponse } = await verifyApiPermission('bookings_management');
+    if (errorResponse) return errorResponse;
+
     const { id } = await params;
-    const cookieStore = await cookies();
-    const token = cookieStore.get('admin_token')?.value;
-
-    if (!token) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
-    const admin = await adminService.getMe(token);
-    if (!admin) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
-
     await dbConnect();
     await reviewService.deleteReview(id);
 
