@@ -74,6 +74,41 @@ export async function uploadToCloudinary(
   });
 }
 
+export async function uploadPdfToCloudinary(
+  fileBuffer: Buffer,
+  folderName: string = 'pdfs'
+): Promise<{ public_id: string; secure_url: string; bytes: number }> {
+  return new Promise((resolve, reject) => {
+    const uploadOptions: Record<string, unknown> = {
+      folder: folderName,
+      resource_type: 'image', // Cloudinary treats PDFs as images for some features, 'raw' is also fine but 'image' is standard for PDFs if rendering is desired. Let's use 'image' and type 'authenticated'.
+      type: 'authenticated', // Ensures it's not publicly accessible
+    };
+
+    const uploadStream = cloudinary.uploader.upload_stream(
+      uploadOptions,
+      (error, result) => {
+        if (error) {
+          reject(new Error(error.message));
+          return;
+        }
+        if (!result) {
+          reject(new Error('Upload returned no result'));
+          return;
+        }
+
+        resolve({
+          public_id: result.public_id,
+          secure_url: result.secure_url,
+          bytes: result.bytes,
+        });
+      }
+    );
+
+    uploadStream.end(fileBuffer);
+  });
+}
+
 // ─── Delete ──────────────────────────────────────────────────────────────────
 
 export async function deleteFromCloudinary(
@@ -107,5 +142,15 @@ export function getVideoThumbnailUrl(publicId: string): string {
     format: 'jpg',
     transformation: [{ width: 600, height: 400, crop: 'fill' }],
     secure: true,
+  });
+}
+
+export function generateSignedPdfUrl(publicId: string): string {
+  return cloudinary.url(publicId, {
+    resource_type: 'image',
+    type: 'authenticated',
+    sign_url: true,
+    secure: true,
+    format: 'pdf',
   });
 }

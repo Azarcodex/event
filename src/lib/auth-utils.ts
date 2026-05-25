@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { adminService } from '@/services/admin.service';
 import { redirect } from 'next/navigation';
+import dbConnect from '@/lib/mongodb';
 
 export async function getAuthenticatedAdmin() {
   const cookieStore = await cookies();
@@ -10,6 +11,7 @@ export async function getAuthenticatedAdmin() {
     redirect('/admin/login');
   }
 
+  await dbConnect();
   const admin = await adminService.getMe(token);
 
   if (!admin) {

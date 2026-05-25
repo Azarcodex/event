@@ -12,7 +12,8 @@ import {
   X,
   MessageSquare,
   Calendar,
-  Users
+  Users,
+  FileText
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -24,6 +25,7 @@ const navItems = [
   { label: 'Reviews Management', href: '/admin/reviews', icon: MessageSquare },
   { label: 'Event Bookings', href: '/admin/bookings', icon: Calendar },
   { label: 'Manage Admins', href: '/admin/manage-admins', icon: Users },
+  { label: 'PDF Management', href: '/admin/pdfs', icon: FileText },
   { label: 'Settings', href: '/admin/settings', icon: Settings },
 ];
 
@@ -48,7 +50,7 @@ export function Sidebar({ isOpen, onClose, admin }: SidebarProps) {
 
   // Filter navigation links based on role-based permission controls
   const filteredNavItems = navItems.filter((item) => {
-    if (item.href === '/admin/manage-admins' || item.href === '/admin/settings') {
+    if (item.href === '/admin/manage-admins' || item.href === '/admin/settings' || item.href === '/admin/pdfs') {
       return admin?.role === 'superadmin';
     }
     if (item.href === '/admin/media-management' || item.href === '/admin/banner-management') {
