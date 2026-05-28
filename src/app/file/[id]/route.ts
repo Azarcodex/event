@@ -45,6 +45,7 @@ export async function GET(
           'Content-Type': 'application/pdf',
           'Content-Disposition': `inline; filename="${encodeURIComponent(pdf.title)}.pdf"`,
           'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+          'X-Robots-Tag': 'noindex, nofollow',
         },
       });
     } catch (fetchError) {

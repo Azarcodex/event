@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/lib/query-provider";
@@ -15,9 +15,43 @@ const outfit = Outfit({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
-  title: "Green Hopper Events | Premium Event Production",
-  description: "Cinematic event management and luxury production house.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://greenhopperevents.com"),
+  title: {
+    default: "Green Hopper Events | Premium Event Production",
+    template: "%s | Green Hopper Events",
+  },
+  description: "Kerala's premier cinematic event management company and luxury production house. Specializing in luxury weddings, staging, sound, and lighting.",
+  keywords: ["event management", "luxury weddings Kerala", "event production", "stage decoration", "Green Hopper Events"],
+  alternates: {
+    canonical: "./",
+  },
+  openGraph: {
+    title: "Green Hopper Events",
+    description: "Kerala's premier cinematic event management company and luxury production house.",
+    url: "https://greenhopperevents.com",
+    siteName: "Green Hopper Events",
+    locale: "en_US",
+    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({

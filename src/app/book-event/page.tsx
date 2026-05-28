@@ -2,8 +2,20 @@ import BookingFormClient from '@/components/booking/BookingFormClient';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Book Your Unforgettable Event | Green Hopper Events',
+  title: 'Book Your Unforgettable Event',
   description: 'Schedule a luxury wedding or event consultation with Kerala\'s premium event management company.',
+  openGraph: {
+    title: 'Book Your Unforgettable Event | Green Hopper Events',
+    description: 'Schedule a luxury wedding or event consultation with Kerala\'s premium event management company.',
+    images: [
+      {
+        url: '/images/og-booking.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Book Your Event with Green Hopper Events',
+      },
+    ],
+  },
 };
 
 export default function BookEventPage() {
