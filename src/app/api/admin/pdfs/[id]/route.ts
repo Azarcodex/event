@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyApiSuperAdmin } from '@/lib/api-auth';
 import dbConnect from '@/lib/mongodb';
 import SharedDocument from '@/models/SharedDocument';
-import { deleteFromCloudinary } from '@/lib/cloudinary';
+import { del } from '@vercel/blob';
 
 export async function PATCH(
   req: NextRequest,
@@ -66,12 +66,14 @@ export async function DELETE(
       return NextResponse.json({ message: 'PDF not found' }, { status: 404 });
     }
 
-    // Delete from Cloudinary
+    // Delete from Vercel Blob
     try {
-      await deleteFromCloudinary(pdf.publicId, 'image'); // We uploaded as 'image'
-    } catch (cloudinaryError) {
-      console.error('Error deleting from Cloudinary:', cloudinaryError);
-      // Proceed to delete from DB even if Cloudinary fails (e.g. already deleted manually)
+      if (pdf.publicId) {
+        await del(pdf.publicId);
+      }
+    } catch (blobError) {
+      console.error('Error deleting from Vercel Blob:', blobError);
+      // Proceed to delete from DB even if Blob deletion fails (e.g. already deleted manually)
     }
 
     await SharedDocument.findByIdAndDelete(id);

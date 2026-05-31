@@ -39,7 +39,7 @@ export async function uploadToCloudinary(
       }),
     };
 
-    const uploadStream = cloudinary.uploader.upload_stream(
+    const uploadStream = cloudinary.uploader.upload_chunked_stream(
       uploadOptions,
       (error, result) => {
         if (error) {
@@ -85,7 +85,7 @@ export async function uploadPdfToCloudinary(
       type: 'authenticated', // Ensures it's not publicly accessible
     };
 
-    const uploadStream = cloudinary.uploader.upload_stream(
+    const uploadStream = cloudinary.uploader.upload_chunked_stream(
       uploadOptions,
       (error, result) => {
         if (error) {

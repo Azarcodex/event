@@ -61,12 +61,19 @@ export function PdfManagementClient({ currentAdmin }: { currentAdmin: any }) {
 
     try {
       setIsUploading(true);
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('title', title);
 
-      await axios.post('/api/admin/pdfs', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      // Upload directly to Vercel Blob using client token
+      // Dynamically import to avoid SSR issues if any
+      const { upload } = await import('@vercel/blob/client');
+      const blob = await upload(file.name, file, {
+        access: 'public',
+        handleUploadUrl: '/api/admin/pdfs/upload',
+      });
+
+      // 3. Save the returned Vercel Blob URL to our database
+      await axios.post('/api/admin/pdfs', {
+        title,
+        blobUrl: blob.url,
       });
       
       toast.success('PDF uploaded securely');
@@ -75,7 +82,8 @@ export function PdfManagementClient({ currentAdmin }: { currentAdmin: any }) {
       setTitle('');
       fetchPdfs();
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to upload PDF');
+      console.error(error);
+      toast.error(error.response?.data?.message || error.message || 'Failed to upload PDF');
     } finally {
       setIsUploading(false);
     }

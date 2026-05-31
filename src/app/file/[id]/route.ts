@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import SharedDocument from '@/models/SharedDocument';
-import { generateSignedPdfUrl } from '@/lib/cloudinary';
 
 export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
@@ -30,16 +29,17 @@ export async function GET(
       return NextResponse.redirect(new URL('/file-error?reason=access_denied', req.url));
     }
 
-    // Generate signed URL
-    const signedUrl = generateSignedPdfUrl(pdf.publicId);
+    // Fetch directly from the Vercel Blob URL
+    // publicId stores the full URL in Vercel Blob integration
+    const fileUrl = pdf.publicId;
 
     try {
-      const response = await fetch(signedUrl);
+      const response = await fetch(fileUrl);
       if (!response.ok) {
-        throw new Error('Failed to fetch from Cloudinary');
+        throw new Error('Failed to fetch from Vercel Blob');
       }
 
-      // Proxy the response to hide the Cloudinary URL
+      // Proxy the response to hide the actual Vercel Blob URL
       return new NextResponse(response.body, {
         headers: {
           'Content-Type': 'application/pdf',

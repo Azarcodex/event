@@ -4,6 +4,7 @@ import "./globals.css";
 import QueryProvider from "@/lib/query-provider";
 import { Toaster } from "@/components/ui/Toaster";
 import GlobalCanvas from "@/components/canvas/GlobalCanvas";
+import HelloCard from "@/components/ui/HelloCard";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -27,6 +28,11 @@ export const metadata: Metadata = {
   title: {
     default: "Green Hopper Events | Premium Event Production",
     template: "%s | Green Hopper Events",
+  },
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
   },
   description: "Kerala's premier cinematic event management company and luxury production house. Specializing in luxury weddings, staging, sound, and lighting.",
   keywords: ["event management", "luxury weddings Kerala", "event production", "stage decoration", "Green Hopper Events"],
@@ -72,6 +78,7 @@ export default function RootLayout({
         <QueryProvider>
           {children}
           <Toaster />
+          <HelloCard />
         </QueryProvider>
       </body>
     </html>

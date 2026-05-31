@@ -8,9 +8,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-brand: #10b981;
-  --color-brand-light: #34d399;
-  --color-brand-dark: #047857;
+  --color-brand: #8acd29;
+  --color-brand-light: #a7e14f;
+  --color-brand-dark: #6aa31a;
   --font-sans: var(--font-inter);
   --font-display: var(--font-outfit);
 }
@@ -57,20 +57,20 @@ img {
 }
 
 .glass-morphism-brand {
-  background: rgba(16, 185, 129, 0.03);
+  background: rgba(138, 205, 41, 0.03);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(138, 205, 41, 0.1);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
 }
 
 .text-gradient {
-  background: linear-gradient(to right, #ffffff, #34d399);
+  background: linear-gradient(to right, #ffffff, #a7e14f);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .text-brand-gradient {
-  background: linear-gradient(to right, #10b981, #34d399);
+  background: linear-gradient(to right, #8acd29, #a7e14f);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyApiSuperAdmin } from '@/lib/api-auth';
 import dbConnect from '@/lib/mongodb';
 import SharedDocument from '@/models/SharedDocument';
-import { uploadPdfToCloudinary } from '@/lib/cloudinary';
 import { z } from 'zod';
 
 export async function GET() {
@@ -27,50 +26,36 @@ export async function POST(req: NextRequest) {
     const { errorResponse, admin } = await verifyApiSuperAdmin();
     if (errorResponse) return errorResponse;
 
-    const formData = await req.formData();
-    const file = formData.get('file') as File | null;
-    const title = formData.get('title') as string | null;
+    const body = await req.json();
+    const { title, blobUrl } = body;
 
-    if (!file || !title) {
+    if (!title || !blobUrl) {
       return NextResponse.json(
-        { message: 'File and title are required' },
+        { message: 'Title and Vercel Blob URL are required' },
         { status: 400 }
       );
     }
-
-    if (file.type !== 'application/pdf') {
-      return NextResponse.json(
-        { message: 'Only PDF files are allowed' },
-        { status: 400 }
-      );
-    }
-
-    // Read file buffer
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    // Upload to Cloudinary securely
-    const uploadResult = await uploadPdfToCloudinary(buffer, 'pdfs');
 
     // Save to database
     await dbConnect();
     const sharedPdf = await SharedDocument.create({
       title,
-      publicId: uploadResult.public_id,
-      secureUrl: uploadResult.secure_url,
+      publicId: blobUrl, // Store the Vercel Blob URL directly
+      secureUrl: blobUrl, // Satisfy Mongoose validation
       uploadedBy: admin.id,
       isEnabled: true,
     });
 
     return NextResponse.json(
-      { message: 'PDF uploaded successfully', pdf: sharedPdf },
+      { message: 'PDF saved successfully', pdf: sharedPdf },
       { status: 201 }
     );
   } catch (error: any) {
-    console.error('Error uploading PDF:', error);
+    console.error('Error saving PDF:', error);
     return NextResponse.json(
-      { message: 'Failed to upload PDF', error: error.message },
+      { message: 'Failed to save PDF', error: error.message },
       { status: 500 }
     );
   }
 }
+
