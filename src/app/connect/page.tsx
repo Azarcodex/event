@@ -30,8 +30,8 @@ export const metadata = {
 
 export default function ConnectPage() {
   const links = [
-    { name: 'Call', icon: Phone, href: 'tel:+919048788884' },
-    { name: 'Whatsapp', icon: WhatsappIcon, href: 'https://wa.me/919048788884' },
+    { name: 'Call', icon: Phone, href: 'tel:+919947688881' },
+    { name: 'Whatsapp', icon: WhatsappIcon, href: 'https://wa.me/919947688881' },
     { name: 'Instagram', icon: InstagramIcon, href: 'https://www.instagram.com/greenhoppereventsindia?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==' },
     { name: 'Facebook', icon: FacebookIcon, href: 'https://www.facebook.com/GreenHopperEvents/' },
     { name: 'Services', icon: Briefcase, href: '/#services' },
